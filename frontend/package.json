@@ -1,0 +1,12 @@
+{
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.20.0",
+    "antd": "^5.12.1",
+    "axios": "^1.6.2",
+    "socket.io-client": "^4.5.4",
+    "dexie": "^3.2.4",
+    "@ant-design/icons": "^5.2.6"
+  }
+}
