@@ -1,4 +1,3 @@
-# Django admin customization
 from django.contrib import admin
 from simple_history.admin import SimpleHistoryAdmin
 from .models import FloorPlan, Room, ConflictLog
@@ -9,7 +8,7 @@ class FloorPlanAdmin(SimpleHistoryAdmin):
     list_display = ['name', 'floor_number', 'version', 'created_by', 'updated_at', 'total_rooms']
     list_filter = ['floor_number', 'created_at']
     search_fields = ['name']
-    readonly_fields = ['version', 'created_at', 'updated_at']
+    readonly_fields = ['version', 'created_at', 'updated_at', 'total_rooms']
 
 
 @admin.register(Room)

@@ -1,6 +1,5 @@
 from django.apps import AppConfig
 
-
-class BookingsConfig(AppConfig):
+class SyncOfflineConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'bookings'  # Important: full path
+    name = 'apps.sync_offline'

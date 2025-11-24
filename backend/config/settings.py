@@ -6,7 +6,6 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-sys.path.insert(0, str(BASE_DIR / 'apps'))
 
 SECRET_KEY = 'django-insecure-your-secret-key-here-change-in-production'
 
@@ -39,9 +38,9 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     
     # Local apps
-    'floors',
-    'bookings',
-    'sync_offline',
+    'apps.floors',
+    'apps.bookings',
+    'apps.sync_offline',
 ]
 
 MIDDLEWARE = [

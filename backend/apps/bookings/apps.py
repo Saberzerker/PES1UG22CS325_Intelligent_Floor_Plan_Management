@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class BookingsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'bookings'  # Important: full path
+    name = 'apps.bookings'  # Important: full path
