@@ -1,0 +1,25 @@
+# Core
+Django>=4.2,<5.0
+djangorestframework
+django-cors-headers
+
+# Database - USE THIS VERSION instead
+psycopg2-binary==2.9.10
+
+# WebSocket
+channels
+channels-redis
+daphne
+
+# OAuth
+django-allauth
+dj-rest-auth
+
+# Version Control
+django-simple-history
+
+# Image handling    
+Pillow
+
+# Environment
+python-decouple
