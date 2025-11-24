@@ -1,4 +1,3 @@
-// Real-time WebSocket service
 import io from 'socket.io-client';
 
 class WebSocketService {

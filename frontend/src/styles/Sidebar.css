@@ -1,0 +1,32 @@
+/* Sidebar-specific styles */
+.sidebar {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(192, 192, 192, 0.2);
+}
+
+.sidebar-menu {
+  border-right: none;
+  background: transparent;
+}
+
+.sidebar-menu .ant-menu-item {
+  margin: 4px 0;
+  border-radius: 8px;
+}
+
+.sidebar-menu .ant-menu-item:hover {
+  background: rgba(0, 255, 200, 0.1);
+}
+
+.sidebar-menu .ant-menu-item-selected {
+  background: rgba(0, 255, 200, 0.2);
+  border-left: 3px solid #00FFC8;
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 16px;
+  right: 16px;
+}
