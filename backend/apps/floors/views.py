@@ -1,14 +1,15 @@
-# Views for floors app
 """
-Views for floors app
+Views for floors app - Updated with conflict resolution
 """
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from django.db import transaction
 from .models import FloorPlan, Room, ConflictLog
 from .serializers import FloorPlanSerializer, RoomSerializer, ConflictLogSerializer
+from .services.conflict_resolution import ConflictResolutionService
 
 
 class FloorPlanViewSet(viewsets.ModelViewSet):
@@ -44,6 +45,70 @@ class FloorPlanViewSet(viewsets.ModelViewSet):
             }, status=status.HTTP_409_CONFLICT)
         
         return Response({'conflict': False})
+    
+    def update(self, request, *args, **kwargs):
+        """FEATURE 1: Override update to handle conflicts"""
+        floor_plan = self.get_object()
+        client_version = request.data.get('version', floor_plan.version)
+        
+        with transaction.atomic():
+            # Check for conflict
+            if ConflictResolutionService.detect_conflict(floor_plan, client_version):
+                # Attempt three-way merge
+                base_data = {
+                    'name': floor_plan.name,
+                    'floor_number': floor_plan.floor_number,
+                }
+                
+                theirs_data = {
+                    'name': request.data.get('name', floor_plan.name),
+                    'floor_number': request.data.get('floor_number', floor_plan.floor_number),
+                }
+                
+                # Get last history as base
+                history = floor_plan.history.all()
+                if history.count() > 1:
+                    base_version = history[1]
+                    base_data = {
+                        'name': base_version.name,
+                        'floor_number': base_version.floor_number,
+                    }
+                
+                merged_data, conflicts = ConflictResolutionService.three_way_merge(
+                    base_data, base_data, theirs_data  # User A is current, User B is theirs
+                )
+                
+                if conflicts:
+                    # Log conflict and return 409
+                    ConflictLog.objects.create(
+                        floor_plan=floor_plan,
+                        user_a=request.user,
+                        user_b=floor_plan.updated_by or floor_plan.created_by,
+                        changes_a=base_data,
+                        changes_b=theirs_data,
+                        resolved_data=merged_data,
+                        resolution_strategy='THREE_WAY_MERGE_AUTO'
+                    )
+                    
+                    return Response({
+                        'error': 'CONFLICT_DETECTED',
+                        'expected_version': floor_plan.version,
+                        'current_version': floor_plan.version,
+                        'conflicts': conflicts,
+                        'merged_data': merged_data
+                    }, status=status.HTTP_409_CONFLICT)
+                
+                # Auto-merge successful
+                for key, value in merged_data.items():
+                    setattr(floor_plan, key, value)
+                floor_plan.version += 1
+                floor_plan.save()
+                
+                serializer = self.get_serializer(floor_plan)
+                return Response(serializer.data)
+            
+            # No conflict, proceed normally
+            return super().update(request, *args, **kwargs)
 
 
 class RoomViewSet(viewsets.ModelViewSet):

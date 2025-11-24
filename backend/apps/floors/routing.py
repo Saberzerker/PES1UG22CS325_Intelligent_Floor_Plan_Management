@@ -3,6 +3,9 @@ WebSocket routing for floors app
 """
 
 from django.urls import re_path
+from .consumers import FloorPlanConsumer, NotificationConsumer
 
-# Empty for now - we'll add consumers later
-websocket_urlpatterns = []
+websocket_urlpatterns = [
+    re_path(r'ws/floor-plans/(?P<floor_plan_id>\w+)/$', FloorPlanConsumer.as_asgi()),
+    re_path(r'ws/notifications/$', NotificationConsumer.as_asgi()),
+]
