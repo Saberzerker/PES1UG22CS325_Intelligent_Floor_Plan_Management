@@ -1,0 +1,1 @@
+# Views for bookings app
