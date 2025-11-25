@@ -69,6 +69,55 @@
 
 
 
+# """
+# Views for sync_offline app
+# """
+
+# from rest_framework import viewsets, status
+# from rest_framework.decorators import action
+# from rest_framework.response import Response
+# from rest_framework.permissions import IsAuthenticated
+# from .models import OfflineChange
+# from .serializers import OfflineChangeSerializer
+# from .services.offline_sync import OfflineSyncService
+
+
+# class OfflineChangeViewSet(viewsets.ModelViewSet):
+#     queryset = OfflineChange.objects.all()
+#     serializer_class = OfflineChangeSerializer
+#     permission_classes = [IsAuthenticated]
+    
+#     def get_queryset(self):
+#         return OfflineChange.objects.filter(user=self.request.user)
+    
+#     @action(detail=False, methods=['post'])
+#     def batch_sync(self, request):
+#         """FEATURE 2: Sync offline changes in batch"""
+#         changes = request.data.get('changes', [])
+        
+#         if not changes:
+#             return Response({'error': 'No changes provided'}, status=400)
+        
+#         results = OfflineSyncService.sync_batch(request.user, changes)
+        
+#         # Return appropriate status based on results
+#         if results['conflicts']:
+#             return Response({
+#                 'message': f'Synced {len(results["synced"])} changes, {len(results["conflicts"])} conflicts detected',
+#                 'results': results
+#             }, status=status.HTTP_207_MULTI_STATUS)
+#         elif results['failed']:
+#             return Response({
+#                 'message': f'Synced {len(results["synced"])} changes, {len(results["failed"])} failed',
+#                 'results': results
+#             }, status=status.HTTP_207_MULTI_STATUS)
+#         else:
+#             return Response({
+#                 'message': f'Successfully synced {len(results["synced"])} changes',
+#                 'results': results
+#             })
+
+
 """
 Views for sync_offline app
 """
